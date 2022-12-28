@@ -1,3 +1,4 @@
+//! Load page before js
 //if else statement to make sure html, css is done loading before JS
 if (document.readyState == 'loading') {
     document.addEventListener('DOMContentLoaded' , ready) // load page fully then run function 'ready'
@@ -10,12 +11,15 @@ function ready() {
     // select all buttons with btn-danger class into a variable
     var removeCartItemButtons = document.getElementsByClassName('btn-danger')
     console.log(removeCartItemButtons)
+
+    //! Remove cart item (1)
     // need to loop through these objects using a for loop (.length = number of remove buttons there is here)
     for (var i = 0; i < removeCartItemButtons.length; i++) {
         var button = removeCartItemButtons[i]
         button.addEventListener('click', removeCartItem) 
     }
 
+    //! Quantity value (1)
     var quantityInputs = document.getElementsByClassName('cart-quantity-input')
     for (var i = 0; i < quantityInputs.length; i++) {
         var input = quantityInputs[i]
@@ -23,21 +27,49 @@ function ready() {
     }
 }
 
+
+
+//! Remove cart item (2)
+
 function removeCartItem(event) {
     var buttonClicked = event.target
     buttonClicked.parentElement.parentElement.remove() // two parent elements to select entire parent element holding the cart. remove to delete items off cart.
     updateCartTotal() //call the function
 }
 
+//! Quantity value (2)
+
 function quantityChanged(event) {
     var input = event.target
     if (isNaN(input.value) || input.value <= 0) { //if input is nothing or >= 0 then
-        input.value = 1 //lowest value set at 1
+        input.value = 1 //lowest quantity value set at 1
     }
     updateCartTotal() //call the function
 }
 
+//! Adding items to cart
 
+var addToCartButtons = document.getElementsByClassName('shop-item-button')
+    for (var i = 0; i < addToCartButtons.length; i++) { 
+        var button = addToCartButtons[i]
+        button.addEventListener('click', addToCartClicked) 
+}
+
+function addToCartClicked(event) {
+    var button = event.target
+    var shopItem = button.parentElement.parentElement
+    var title = shopItem.getElementsByClassName('shop-item-title')[0].innerText //query for shop item name
+    var price = shopItem.getElementsByClassName('shop-item-price')[0].innerText //query for the price of shop item
+    var imageSrc = shopItem.getElementsByClassName('shop-item-image')[0].src //query for item image
+    console.log(title, price, imageSrc) //now pressing 'add to cart' buttons will console log the names of item
+    addItemToCart(title, price, imageSrc)
+}
+
+
+
+
+
+//! Update cart FINAL
 //want to find the price and multiply by quantity of items for total cost 
 function updateCartTotal() {
     var cartItemContainer = document.getElementsByClassName('cart-items')[0] //we only want very first element inside array. because default returns array of elements but we only want one
