@@ -1,5 +1,5 @@
 //if else statement to make sure html, css is done loading before JS
-if (document.readyState === 'loading') {
+if (document.readyState == 'loading') {
     document.addEventListener('DOMContentLoaded' , ready) // load page fully then run function 'ready'
 } else {
     ready() //else use this function straight away
@@ -15,11 +15,25 @@ function ready() {
         var button = removeCartItemButtons[i]
         button.addEventListener('click', removeCartItem) 
     }
+
+    var quantityInputs = document.getElementsByClassName('cart-quantity-input')
+    for (var i = 0; i < quantityInputs.length; i++) {
+        var input = quantityInputs[i]
+        input.addEventListener('change', quantityChanged) //'change' for anytime the input changes its value. Then run function 'quantityChanged' 
+    }
 }
 
 function removeCartItem(event) {
     var buttonClicked = event.target
     buttonClicked.parentElement.parentElement.remove() // two parent elements to select entire parent element holding the cart. remove to delete items off cart.
+    updateCartTotal() //call the function
+}
+
+function quantityChanged(event) {
+    var input = event.target
+    if (isNaN(input.value) || input.value <= 0) { //if input is nothing or >= 0 then
+        input.value = 1 //lowest value set at 1
+    }
     updateCartTotal() //call the function
 }
 
@@ -29,7 +43,7 @@ function updateCartTotal() {
     var cartItemContainer = document.getElementsByClassName('cart-items')[0] //we only want very first element inside array. because default returns array of elements but we only want one
     var cartRows = cartItemContainer.getElementsByClassName('cart-row')
     var total = 0 // make variable to update cart total
-    for (var i = 0; i < removeCartItemButtons.length; i++) {
+    for (var i = 0; i < cartRows.length; i++) {
         var cartRow = cartRows[i]
         var priceElement = cartRow.getElementsByClassName('cart-price')[0] // selected element but not item inside
         var quantityElement = cartRow.getElementsByClassName('cart-quantity-input') //selected element but not item inside
@@ -37,9 +51,10 @@ function updateCartTotal() {
         console.log('priceElement, quantityElement') //checks to see if our price element and quantity element is selected on console
         var price = parseFloat(priceElement.innerText.replace('$', '')) //grabs price of element. Use .replace to remove dollar sign. parsefloat returns value as number
         var quantity = quantityElement.value  // inputs dont have text inside them. ONly 'value'
-        // console.log(price * quantity) //check to see if price is returned
+        console.log(price * quantity) //check to see if price is returned
         total = total + (price * quantity) //calculation into 'total' variable
     }
+    total = Math.round(total * 100) / 100 //round to 2 d.p for total cost
     document.getElementsByClassName('cart-total-price')[0].innerText = '$' + total //updates cart total price on website
 }
  
