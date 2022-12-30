@@ -47,7 +47,7 @@ function quantityChanged(event) {
     updateCartTotal() //call the function
 }
 
-//! Adding items to cart
+//! Adding items to cart START
 
 var addToCartButtons = document.getElementsByClassName('shop-item-button')
     for (var i = 0; i < addToCartButtons.length; i++) { 
@@ -65,8 +65,14 @@ function addToCartClicked(event) {
     addItemToCart(title, price, imageSrc)
 }
 
+function addItemToCart(title, price, imageSrc) {
+    var cartRow = document.createElement('div')
+    var cartItems = document.getElementsByClassName('cart-items')[0]
+    cartItems.append(cartRow)
+}
 
 
+//! Adding items to cart END
 
 
 //! Update cart FINAL
